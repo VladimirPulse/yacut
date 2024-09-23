@@ -1,6 +1,7 @@
 from flask import abort, flash, redirect, render_template
 
-from yacut.api_views import get_unique_short_id
+from yacut.constans import BASE_URL
+from yacut.utils import get_unique_short_id
 
 from . import app, db
 from .forms import HrefForm
@@ -15,21 +16,20 @@ def index_view():
         if URLMap.query.filter_by(short=short).first() is not None:
             flash('Предложенный вариант короткой ссылки уже существует.')
             return render_template('index.html', form=form)
-        if short == '':
+        if short == '' or short is None:
             short = get_unique_short_id()
         hrefs = URLMap(
             original=form.original_link.data,
             short=short,
         )
-        href = hrefs.short
-        url = f'http://localhost/{hrefs.short}'
+        url = f'{BASE_URL}/{hrefs.short}'
         db.session.add(hrefs)
         db.session.commit()
         flash('Ваша новая ссылка готова:')
         return render_template(
             'index.html',
-            form=form, url=url,
-            short_url=href
+            form=form,
+            url=url,
         )
     return render_template('index.html', form=form)
 

@@ -58,21 +58,8 @@
                     {% for message in messages %}
                       {{ message }}
                       {% if url %}
-                        <a href="{{ url_for('redirect_to_original', short_url=short_url) }}">{{ url }}</a>
+                        <a href="{{ url }}">{{ url }}</a>
                       {% endif %}
-                      <!-- {% if 'url' in session %}
-                        <a href="{{ url_for('redirect_to_original', short_url=session['url']) }}">{{ session['url'] }}</a>
-                      {% endif %}
-                      {% if url %}
-
-                        <a href="{{ url }}" target="_blank">{{ url }}</a>
-                        <a href="{{ url_for('redirect_to_original', short_url=href) }}">{{ url }}</a>
-                        <a href="{{ url_for('redirect_to_original', short_url=short_url) }}">{{ url }}</a>
-                        <a href="{{ url_for('redirect_to_original', short_url=href) }}">{{ url }}</a>
-
-
-                        <a href="{{ url }}" target="_blank">{{ url }}</a>
-                      {% endif %} -->
                     {% endfor %}
                   {% endif %}
                 {% endwith %}

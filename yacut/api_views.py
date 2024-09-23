@@ -1,20 +1,12 @@
 import re
-import random
-import string
 from flask import jsonify, request
+
+from yacut.constans import BASE_URL, MAX_LEN_SHORT, SYMVOLS
+from yacut.utils import get_unique_short_id
 
 from . import app, db
 from .error_handlers import InvalidAPIUsage
 from yacut.models import URLMap
-
-
-MAX_LEN_SHORT = '{1,6}'
-MAX_LEN_ORIDINAL = '{1,16}'
-SYMVOLS = string.ascii_letters + string.digits
-
-
-def get_unique_short_id():
-    return ''.join(random.choices(SYMVOLS, k=6))
 
 
 @app.route('/api/id/', methods=['POST'])
@@ -32,8 +24,7 @@ def creat_short_href():
         raise InvalidAPIUsage(
             'Предложенный вариант короткой ссылки уже существует.')
     if not re.match(
-        # r'^[\w]{}$'.format(MAX_LEN_ORIDINAL, MAX_LEN_SHORT),
-        r'^[\w]{}$'.format(MAX_LEN_ORIDINAL),
+        r'^[\w]{}$'.format(MAX_LEN_SHORT),
         data['custom_id']
     ):
         raise InvalidAPIUsage('Указано недопустимое имя для короткой ссылки')
@@ -47,7 +38,7 @@ def creat_short_href():
     db.session.commit()
     dict_url = {
         'url': hrefs.original,
-        'short_link': f'http://localhost/{hrefs.short}'
+        'short_link': f'{BASE_URL}/{hrefs.short}'
     }
     return jsonify(dict_url), 201
 

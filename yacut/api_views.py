@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import re
 from flask import jsonify, request
 
@@ -40,14 +41,14 @@ def creat_short_href():
         'url': hrefs.original,
         'short_link': f'{BASE_URL}/{hrefs.short}'
     }
-    return jsonify(dict_url), 201
+    return jsonify(dict_url), HTTPStatus.CREATED
 
 
 @app.route('/api/id/<short_id>/', methods=['GET'])
 def update_opinion(short_id):
     hrefs = URLMap.query.filter_by(short=short_id).first()
     if hrefs is None:
-        raise InvalidAPIUsage('Указанный id не найден', 404)
+        raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
     return jsonify(
         {'url': hrefs.original}
-    ), 200
+    ), HTTPStatus.OK

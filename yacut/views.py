@@ -1,4 +1,4 @@
-from flask import abort, flash, redirect, render_template
+from flask import flash, redirect, render_template
 
 from yacut.constans import BASE_URL
 from yacut.utils import get_unique_short_id
@@ -36,8 +36,6 @@ def index_view():
 
 @app.route('/<short_url>')
 def redirect_to_original(short_url):
-    href = URLMap.query.filter_by(short=short_url).first()
+    href = URLMap.query.filter_by(short=short_url).first_or_404()
     if href:
         return redirect(href.original)
-    else:
-        abort(404)
